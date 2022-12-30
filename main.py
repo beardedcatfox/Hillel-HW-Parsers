@@ -1,5 +1,3 @@
-import re
-
 def parse(query: str) -> dict:
     myd = dict()
     if 'name' in query:
@@ -10,6 +8,12 @@ def parse(query: str) -> dict:
 
 
 if __name__ == '__main__':
+    assert parse('https://example.com/path/to/page?name=ferret&color=purple') == {'name': 'ferret', 'color': 'purple'}
+    assert parse('https://example.com/path/to/page?name=ferret&color=purple&') == {'name': 'ferret', 'color': 'purple'}
+    assert parse('http://example.com/') == {}
+    assert parse('http://example.com/?') == {}
+    assert parse('http://example.com/?name=Dima') == {'name': 'Dima'}
+	
     assert parse('https://example.com/path/to/page?name=Pavel&color=green') == {'name': 'Pavel', 'color': 'green'}
     assert parse('https://example.com/path/to/page?name=test&color=_') == {'name': 'test', 'color': '_'}
     assert parse('https://example.com/path/to/page?name=MaxKol&color=Blue') == {'name': 'MaxKol', 'color': 'Blue'}
@@ -21,3 +25,12 @@ if __name__ == '__main__':
     assert parse('https://example.com/path/to/page?name=AKoel&color=purple') == {'name': 'AKoel', 'color': 'purple'}
     assert parse('https://example.com/path/to/page?name=okey&color=black') == {'name': 'okey', 'color': 'black'}
 
+def parse_cookie(query: str) -> dict:
+    return {}
+
+
+if __name__ == '__main__':
+    assert parse_cookie('name=Dima;') == {'name': 'Dima'}
+    assert parse_cookie('') == {}
+    assert parse_cookie('name=Dima;age=28;') == {'name': 'Dima', 'age': '28'}
+    assert parse_cookie('name=Dima=User;age=28;') == {'name': 'Dima=User', 'age': '28'}
