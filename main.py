@@ -1,5 +1,17 @@
 import re
 
+def parse(query: str) -> dict:
+    return {}
+
+
+if __name__ == '__main__':
+    assert parse('https://example.com/path/to/page?name=ferret&color=purple') == {'name': 'ferret', 'color': 'purple'}
+    assert parse('https://example.com/path/to/page?name=ferret&color=purple&') == {'name': 'ferret', 'color': 'purple'}
+    assert parse('http://example.com/') == {}
+    assert parse('http://example.com/?') == {}
+    assert parse('http://example.com/?name=Dima') == {'name': 'Dima'}
+
+
 def parse_cookie(query: str) -> dict:
     myd = dict()
     if 'name' in query:
@@ -9,8 +21,12 @@ def parse_cookie(query: str) -> dict:
     return myd
 
 
-
 if __name__ == '__main__':
+    assert parse_cookie('name=Dima;') == {'name': 'Dima'}
+    assert parse_cookie('') == {}
+    assert parse_cookie('name=Dima;age=28;') == {'name': 'Dima', 'age': '28'}
+    assert parse_cookie('name=Dima=User;age=28;') == {'name': 'Dima=User', 'age': '28'}
+    
     assert parse_cookie('name=pavel;age=23;') == {'name': 'pavel', 'age': '23'}
     assert parse_cookie('name=oLeks;age=248;') == {'name': 'oLeks', 'age': '248'}
     assert parse_cookie('name=max_core;age=18;') == {'name': 'max_core', 'age': '18'}
