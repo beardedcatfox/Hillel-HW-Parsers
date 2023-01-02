@@ -1,5 +1,5 @@
-from http.cookies import SimpleCookie
 
+from http.cookies import SimpleCookie
 
 def parse(query: str) -> dict:
     return {}
@@ -13,11 +13,13 @@ if __name__ == '__main__':
     assert parse('http://example.com/?name=Dima') == {'name': 'Dima'}
 
 
+
 def parse_cookie(query: str) -> dict:
     ck = SimpleCookie()
     ck.load(query)
     cookies = {a: b.value for a, b in ck.items()}
     return cookies
+
 
 
 if __name__ == '__main__':
