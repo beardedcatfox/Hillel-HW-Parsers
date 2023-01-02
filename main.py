@@ -1,4 +1,5 @@
-import re
+from http.cookies import SimpleCookie
+
 
 def parse(query: str) -> dict:
     return {}
@@ -13,12 +14,10 @@ if __name__ == '__main__':
 
 
 def parse_cookie(query: str) -> dict:
-    myd = dict()
-    if 'name' in query:
-        myd['name'] = name = re.search(r'name=((\w+=?)+)', query).group(1)
-    if 'age' in query:
-        myd['age'] = re.search(r'age=(\w+)', query).group(1)
-    return myd
+    ck = SimpleCookie()
+    ck.load(query)
+    cookies = {a: b.value for a, b in ck.items()}
+    return cookies
 
 
 if __name__ == '__main__':
@@ -26,15 +25,17 @@ if __name__ == '__main__':
     assert parse_cookie('') == {}
     assert parse_cookie('name=Dima;age=28;') == {'name': 'Dima', 'age': '28'}
     assert parse_cookie('name=Dima=User;age=28;') == {'name': 'Dima=User', 'age': '28'}
-    
-    assert parse_cookie('name=pavel;age=23;') == {'name': 'pavel', 'age': '23'}
-    assert parse_cookie('name=oLeks;age=248;') == {'name': 'oLeks', 'age': '248'}
-    assert parse_cookie('name=max_core;age=18;') == {'name': 'max_core', 'age': '18'}
-    assert parse_cookie('name=tEsT;age=1128;') == {'name': 'tEsT', 'age': '1128'}
-    assert parse_cookie('name=aaaa;age=22;') == {'name': 'aaaa', 'age': '22'}
-    assert parse_cookie('name=AnastasiiaSU;age=28;') == {'name': 'AnastasiiaSU', 'age': '28'}
-    assert parse_cookie('name=QA;age=88;') == {'name': 'QA', 'age': '88'}
-    assert parse_cookie('name=Max_Min;age=1;') == {'name': 'Max_Min', 'age': '1'}
-    assert parse_cookie('name=AAAAA;age=0;') == {'name': 'AAAAA', 'age': '0'}
-    assert parse_cookie('name=S=D=F;age=000;') == {'name': 'S=D=F', 'age': '000'}
+
+    assert parse_cookie('today=New_Year;num=2023') == {'today': 'New_Year', 'num': '2023'}
+    assert parse_cookie('123=321;456=abc;') == {'123': '321', '456': 'abc'}
+    assert parse_cookie('1=2=3=4;True=False;') == {'1': '2=3=4', 'True': 'False'}
+    assert parse_cookie('name=unname;age=inf;sex=male') == {'name': 'unname', 'age': 'inf', 'sex': 'male'}
+    assert parse_cookie('one=1;two=2;three=3;four=4;') == {'one': '1', 'two': '2', 'three': '3', 'four': '4'}
+    assert parse_cookie('k,ymjhf;tkdhgbcn') == {}
+    assert parse_cookie('gjvhggnv,gmhng') == {}
+    assert parse_cookie('??????;;') == {}
+    assert parse_cookie('SCHOOL=HILLEL;COURSE=PYTHON_PRO;') == {'SCHOOL': 'HILLEL', 'COURSE': 'PYTHON_PRO'}
+    assert parse_cookie('name=!!!;!!!=28') == {'name': '!!!', '!!!': '28'}
+    assert parse_cookie('a=b;c=d;') == {'a': 'b', 'c': 'd'}
+    assert parse_cookie('!/??ef;.,lmlvlv,') == {}
 
