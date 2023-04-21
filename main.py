@@ -1,6 +1,7 @@
 import urllib.parse as urlparser
 from http.cookies import SimpleCookie
 
+
 def parse(query: str) -> dict:
     res = {}
     pars_res = urlparser.urlparse(query)
@@ -9,7 +10,6 @@ def parse(query: str) -> dict:
     for ind, val in dict_from_query.items():
         res.update({ind: str(*val)})
     return res
-
 
 
 if __name__ == '__main__':
@@ -31,13 +31,11 @@ if __name__ == '__main__':
     assert parse('https://example.com/path/to/page?') == {}
 
 
-
 def parse_cookie(query: str) -> dict:
     ck = SimpleCookie()
     ck.load(query)
     cookies = {a: b.value for a, b in ck.items()}
     return cookies
-
 
 
 if __name__ == '__main__':
